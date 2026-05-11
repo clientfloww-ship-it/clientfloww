@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clientfloww — Gestion Instagram & Présence en Ligne</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --or: #F5C518;
+  --or2: #D4A900;
+  --noir: #080808;
+  --noir2: #101010;
+  --noir3: #161616;
+  --texte: #F0EDE8;
+  --gris: rgba(240,237,232,0.45);
+  --border: rgba(255,255,255,0.07);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--noir);
+  color: var(--texte);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ===== UTILS ===== */
+.or { color: var(--or); }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 100px 0; }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(245,197,24,0.15);
+  padding: 0 24px;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  color: white;
+  letter-spacing: -0.5px;
+}
+.nav-logo span { color: var(--or); }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: 13px; font-weight: 600; color: rgba(240,237,232,0.5);
+  text-decoration: none; text-transform: uppercase; letter-spacing: 1px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--or); }
+.nav-cta {
+  background: var(--or); color: #000 !important;
+  padding: 10px 22px; border-radius: 3px;
+  font-weight: 900 !important; font-size: 12px !important;
+  letter-spacing: 1.5px !important;
+  transition: opacity 0.2s !important;
+}
+.nav-cta:hover { opacity: 0.85; }
+.nav-mobile-btn { display: none; }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding-top: 64px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 50%, rgba(245,197,24,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(245,197,24,0.04) 0%, transparent 60%);
+}
+/* Grille subtile */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+}
+.hero-content {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
+  width: 100%;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(245,197,24,0.1);
+  border: 1px solid rgba(245,197,24,0.25);
+  color: var(--or);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 7px 16px; border-radius: 100px;
+  margin-bottom: 28px;
+}
+.hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--or); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+.hero-h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(38px, 5vw, 68px);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+.hero-h1 em { color: var(--or); font-style: normal; display: block; }
+.hero-sub {
+  font-size: 16px; color: var(--gris);
+  max-width: 420px; margin-bottom: 40px;
+  line-height: 1.7;
+}
+.hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--or); color: #000;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900; font-size: 13px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 16px 32px; border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: #fff; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(240,237,232,0.7);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; font-size: 13px;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 16px 28px; border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--or); color: var(--or); }
+
+/* HERO — téléphone mockup */
+.hero-visual {
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+}
+.phone-mockup {
+  width: 240px;
+  background: #111;
+  border-radius: 36px;
+  border: 2px solid #222;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.03);
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+.phone-notch {
+  background: #000;
+  height: 28px;
+  display: flex; align-items: center; justify-content: center;
+}
+.phone-notch-pill { width: 80px; height: 22px; background: #000; border-radius: 100px; border: 1px solid #1a1a1a; }
+.phone-screen {
+  background: #080808;
+  padding: 0;
+}
+/* Mini Instagram feed inside phone */
+.insta-header {
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.insta-avatar { width: 28px; height: 28px; background: var(--or); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #000; }
+.insta-name { font-size: 10px; font-weight: 700; color: white; }
+.insta-handle { font-size: 8px; color: #555; }
+.insta-post {
+  background: #080808;
+  border-bottom: 1px solid #111;
+}
+.insta-post-img {
+  width: 100%; aspect-ratio: 1/1;
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: flex-end;
+  padding: 12px;
+  font-family: 'Montserrat', sans-serif;
+  position: relative; overflow: hidden;
+}
+.post-1 { background: #080808; }
+.post-badge-sm { background: var(--or); color: #000; font-size: 6px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 1px; margin-bottom: 6px; display: inline-block; }
+.post-title-sm { font-size: 13px; font-weight: 900; color: white; text-transform: uppercase; line-height: 1.0; letter-spacing: -0.5px; }
+.post-title-sm em { color: var(--or); font-style: normal; }
+.post-sub-sm { font-size: 7px; color: rgba(255,255,255,0.4); margin-top: 5px; font-family: 'DM Sans', sans-serif; }
+.post-handle-sm { position: absolute; bottom: 8px; right: 8px; font-size: 6px; color: rgba(255,255,255,0.2); font-weight: 600; }
+.insta-actions { padding: 8px 12px; display: flex; gap: 10px; }
+.insta-action { font-size: 14px; }
+.insta-likes { padding: 0 12px 6px; font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.6); }
+
+/* Glow derrière le téléphone */
+.phone-glow {
+  position: absolute;
+  width: 300px; height: 400px;
+  background: radial-gradient(ellipse, rgba(245,197,24,0.12) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 1; pointer-events: none;
+}
+
+/* Stats flottantes */
+.float-stat {
+  position: absolute;
+  background: rgba(16,16,16,0.95);
+  border: 1px solid rgba(245,197,24,0.2);
+  border-radius: 10px;
+  padding: 10px 16px;
+  backdrop-filter: blur(10px);
+  z-index: 3;
+}
+.float-stat-num { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 20px; color: var(--or); line-height: 1; }
+.float-stat-label { font-size: 10px; color: rgba(255,255,255,0.4); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.fs1 { top: 8%; right: -10%; }
+.fs2 { bottom: 20%; left: -15%; }
+
+/* ===== PROBLÈME ===== */
+.problem { background: var(--noir2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.problem-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
+}
+.problem-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--or); margin-bottom: 16px;
+}
+.problem-h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 900; line-height: 1.0;
+  text-transform: uppercase; letter-spacing: -1px;
+  margin-bottom: 24px;
+}
+.problem-h2 em { color: var(--or); font-style: normal; }
+.problem-text { color: var(--gris); font-size: 15px; line-height: 1.8; margin-bottom: 20px; }
+.problem-items { display: flex; flex-direction: column; gap: 12px; }
+.problem-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.problem-x { width: 28px; height: 28px; background: rgba(255,60,60,0.1); border: 1px solid rgba(255,60,60,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.problem-item-text { font-size: 14px; color: rgba(255,255,255,0.65); font-weight: 500; line-height: 1.4; }
+.problem-item-text strong { color: white; }
+
+/* ===== OFFRE ===== */
+.offre-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--or);
+  text-align: center; margin-bottom: 16px;
+}
+.offre-h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: 900; line-height: 1.0;
+  text-transform: uppercase; letter-spacing: -1.5px;
+  text-align: center; margin-bottom: 16px;
+}
+.offre-h2 em { color: var(--or); font-style: normal; }
+.offre-sub { text-align: center; color: var(--gris); font-size: 15px; max-width: 480px; margin: 0 auto 64px; }
+.offre-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.offre-card {
+  background: var(--noir2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 28px;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+  overflow: hidden;
+}
+.offre-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--or);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s;
+}
+.offre-card:hover { border-color: rgba(245,197,24,0.3); transform: translateY(-4px); }
+.offre-card:hover::before { transform: scaleX(1); }
+.offre-card-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 900; color: var(--or);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px;
+}
+.offre-icon {
+  width: 52px; height: 52px;
+  background: rgba(245,197,24,0.1);
+  border: 1px solid rgba(245,197,24,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px;
+}
+.offre-card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px; font-weight: 900; color: white;
+  text-transform: uppercase; letter-spacing: -0.5px;
+  line-height: 1.1; margin-bottom: 6px;
+}
+.offre-card-subtitle { font-size: 12px; color: var(--or); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+.offre-card-text { font-size: 14px; color: var(--gris); line-height: 1.7; margin-bottom: 20px; }
+.offre-card-items { display: flex; flex-direction: column; gap: 8px; }
+.offre-card-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500;
+}
+.offre-card-item::before { content: '✓'; color: var(--or); font-weight: 900; font-size: 12px; flex-shrink: 0; }
+
+/* ===== RÉSULTATS / STATS ===== */
+.stats { background: var(--or); }
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.stat-box {
+  padding: 48px 32px;
+  text-align: center;
+  border-right: 1px solid rgba(0,0,0,0.15);
+}
+.stat-box:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(36px, 4vw, 60px);
+  font-weight: 900; color: #000; line-height: 1;
+  letter-spacing: -2px; margin-bottom: 8px;
+}
+.stat-label { font-size: 12px; font-weight: 700; color: rgba(0,0,0,0.55); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ===== COMMENT ÇA MARCHE ===== */
+.process { background: var(--noir2); }
+.process-h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 900; text-transform: uppercase;
+  letter-spacing: -1px; text-align: center;
+  margin-bottom: 64px;
+}
+.process-h2 em { color: var(--or); font-style: normal; }
+.process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+.process-steps::before {
+  content: '';
+  position: absolute; top: 28px; left: 12.5%; right: 12.5%;
+  height: 1px; background: linear-gradient(90deg, transparent, var(--or), transparent);
+  z-index: 0;
+}
+.process-step { text-align: center; padding: 0 20px; position: relative; z-index: 1; }
+.process-step-num {
+  width: 56px; height: 56px;
+  background: var(--or);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900; font-size: 20px; color: #000;
+  margin: 0 auto 20px;
+}
+.process-step-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 900; color: white;
+  text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 10px;
+}
+.process-step-text { font-size: 13px; color: var(--gris); line-height: 1.6; }
+
+/* ===== POURQUOI MOI ===== */
+.pourquoi {
+  background: var(--noir);
+  border-top: 1px solid var(--border);
+}
+.pourquoi-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.pourquoi-photo {
+  position: relative;
+}
+.pourquoi-card {
+  background: var(--noir2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.pourquoi-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--or);
+}
+.pourquoi-avatar {
+  width: 72px; height: 72px;
+  background: var(--or);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900; font-size: 28px; color: #000;
+  margin-bottom: 20px;
+}
+.pourquoi-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900; font-size: 22px; color: white;
+  text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 4px;
+}
+.pourquoi-role { font-size: 13px; color: var(--or); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+.pourquoi-quote {
+  font-size: 15px; color: var(--gris); line-height: 1.8;
+  border-left: 3px solid var(--or); padding-left: 20px;
+  font-style: italic; margin-bottom: 20px;
+}
+.pourquoi-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.pourquoi-tag {
+  background: rgba(245,197,24,0.1); border: 1px solid rgba(245,197,24,0.2);
+  color: var(--or); font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 100px;
+}
+.pourquoi-atouts { display: flex; flex-direction: column; gap: 16px; }
+.pourquoi-atout {
+  display: flex; align-items: flex-start; gap: 20px;
+  padding: 20px;
+  background: var(--noir2); border: 1px solid var(--border); border-radius: 10px;
+  transition: border-color 0.2s;
+}
+.pourquoi-atout:hover { border-color: rgba(245,197,24,0.2); }
+.pourquoi-atout-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  background: rgba(245,197,24,0.1); border: 1px solid rgba(245,197,24,0.15);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.pourquoi-atout-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px; font-weight: 900; color: white;
+  text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 4px;
+}
+.pourquoi-atout-text { font-size: 13px; color: var(--gris); line-height: 1.6; }
+
+/* ===== CTA FINAL ===== */
+.cta-section {
+  background: var(--or);
+  padding: 100px 0;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(-45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 14px);
+}
+.cta-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(0,0,0,0.45); margin-bottom: 16px; position: relative; z-index: 1; }
+.cta-h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 900; color: #000;
+  text-transform: uppercase; letter-spacing: -2px; line-height: 0.95;
+  margin-bottom: 20px; position: relative; z-index: 1;
+}
+.cta-sub { font-size: 16px; color: rgba(0,0,0,0.6); margin-bottom: 40px; position: relative; z-index: 1; }
+.cta-btn-dark {
+  background: #000; color: var(--or);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900; font-size: 14px;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 18px 40px; border-radius: 3px;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+  position: relative; z-index: 1;
+  transition: transform 0.2s;
+}
+.cta-btn-dark:hover { transform: scale(1.03); }
+
+/* ===== FOOTER ===== */
+footer {
+  background: #000;
+  border-top: 1px solid rgba(245,197,24,0.1);
+  padding: 32px 24px;
+  text-align: center;
+}
+.footer-logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 20px; color: white; letter-spacing: -0.5px; margin-bottom: 8px; }
+.footer-logo span { color: var(--or); }
+.footer-sub { font-size: 12px; color: rgba(255,255,255,0.25); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-mobile-btn { display: block; background: var(--or); color: #000; border: none; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 10px 18px; border-radius: 3px; cursor: pointer; }
+  .hero-content { grid-template-columns: 1fr; gap: 40px; }
+  .hero-visual { order: -1; }
+  .phone-mockup { width: 180px; }
+  .fs1, .fs2 { display: none; }
+  .problem-grid { grid-template-columns: 1fr; gap: 40px; }
+  .offre-cards { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .stat-box { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.15); }
+  .process-steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .process-steps::before { display: none; }
+  .pourquoi-grid { grid-template-columns: 1fr; gap: 40px; }
+  .section { padding: 64px 0; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
+  .hero-btns { flex-direction: column; }
+  .btn-primary, .btn-secondary { text-align: center; justify-content: center; }
+}
+
+/* ANIMATIONS */
+.fade-up {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">client<span>floww</span>.fr</div>
+  <div class="nav-links">
+    <a href="#probleme">Le problème</a>
+    <a href="#offre">L'offre</a>
+    <a href="#processus">Comment ça marche</a>
+    <a href="#contact" class="nav-cta">✉ DM "GO"</a>
+  </div>
+  <button class="nav-mobile-btn" onclick="window.location='#contact'">✉ DM "GO"</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero section">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="fade-up">
+        <div class="hero-tag">🇫🇷 Partout en France</div>
+        <h1 class="hero-h1">
+          Vos clients<br>viennent
+          <em>à vous.</em>
+        </h1>
+        <p class="hero-sub">
+          Je gère votre Instagram, votre mini site et vos réponses clients — pendant que vous vous concentrez sur votre métier.
+        </p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn-primary">✉ DM "GO" pour démarrer →</a>
+          <a href="#offre" class="btn-secondary">Voir l'offre</a>
+        </div>
+      </div>
+      <div class="hero-visual fade-up">
+        <div class="phone-glow"></div>
+        <div class="float-stat fs1">
+          <div class="float-stat-num">+340%</div>
+          <div class="float-stat-label">de reach</div>
+        </div>
+        <div class="float-stat fs2">
+          <div class="float-stat-num">10</div>
+          <div class="float-stat-label">posts / mois</div>
+        </div>
+        <div class="phone-mockup">
+          <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+          <div class="phone-screen">
+            <div class="insta-header">
+              <div class="insta-avatar">CF</div>
+              <div>
+                <div class="insta-name">clientfloww.fr</div>
+                <div class="insta-handle">@clientfloww.fr</div>
+              </div>
+            </div>
+            <div class="insta-post">
+              <div class="insta-post-img post-1">
+                <div class="post-badge-sm">VÉRITÉ QUI DÉRANGE</div>
+                <div class="post-title-sm">Vos clients<br>vont chez<br><em>votre concurrent.</em></div>
+                <div class="post-sub-sm">Voici pourquoi. →</div>
+                <div class="post-handle-sm">@clientfloww.fr</div>
+              </div>
+              <div class="insta-actions">
+                <span class="insta-action">🤍</span>
+                <span class="insta-action">💬</span>
+                <span class="insta-action">↗</span>
+              </div>
+              <div class="insta-likes">247 mentions J'aime</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLÈME -->
+<section class="problem section" id="probleme">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="fade-up">
+        <div class="problem-label">⚠ Le problème</div>
+        <h2 class="problem-h2">Vous perdez des<br>clients <em>chaque jour</em><br>sans le savoir.</h2>
+        <p class="problem-text">70% des gens vérifient les réseaux sociaux avant d'acheter. Si votre Instagram est vide ou inactif, ils passent à votre concurrent. Avant même de vous contacter.</p>
+        <a href="#offre" class="btn-primary" style="display:inline-flex;">Voir la solution →</a>
+      </div>
+      <div class="problem-items fade-up">
+        <div class="problem-item">
+          <div class="problem-x">✗</div>
+          <div class="problem-item-text"><strong>Compte Instagram abandonné</strong> — Dernier post il y a 3 mois. Aucune story. Le client repart en 5 secondes.</div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-x">✗</div>
+          <div class="problem-item-text"><strong>Messages sans réponse</strong> — Un prospect envoie un DM. Il attend 3 jours. Il signe avec quelqu'un d'autre.</div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-x">✗</div>
+          <div class="problem-item-text"><strong>Pas de site professionnel</strong> — Votre bio pointe sur rien. Zéro crédibilité. Le client doute.</div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-x">✗</div>
+          <div class="problem-item-text"><strong>Pas le temps de gérer tout ça</strong> — Votre métier prend déjà tout votre temps. C'est normal.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFRE -->
+<section class="section" id="offre">
+  <div class="container">
+    <div class="offre-label fade-up">✨ La solution</div>
+    <h2 class="offre-h2 fade-up">Un système <em>complet.</em><br>Zéro effort de votre côté.</h2>
+    <p class="offre-sub fade-up">Je prends en charge votre présence en ligne de A à Z. Vous vous concentrez sur votre métier. Je m'occupe du reste.</p>
+    <div class="offre-cards">
+      <div class="offre-card fade-up">
+        <div class="offre-card-num">01</div>
+        <div class="offre-icon">📱</div>
+        <div class="offre-card-title">Instagram<br>qui attire</div>
+        <div class="offre-card-subtitle">10 posts / mois</div>
+        <p class="offre-card-text">Du contenu stratégique créé, planifié et publié pour vous. Carrousels, posts, Reels — tout inclus.</p>
+        <div class="offre-card-items">
+          <div class="offre-card-item">Création graphique complète</div>
+          <div class="offre-card-item">Textes & accroches optimisés</div>
+          <div class="offre-card-item">Publication aux meilleurs horaires</div>
+          <div class="offre-card-item">Rapport mensuel de performance</div>
+        </div>
+      </div>
+      <div class="offre-card fade-up" style="transition-delay:0.1s">
+        <div class="offre-card-num">02</div>
+        <div class="offre-icon">🌐</div>
+        <div class="offre-card-title">Mini site<br>pro</div>
+        <div class="offre-card-subtitle">Livré en 7 jours</div>
+        <p class="offre-card-text">Un site clair, rapide et mobile-first qui présente votre offre, vos réalisations et donne confiance en 10 secondes.</p>
+        <div class="offre-card-items">
+          <div class="offre-card-item">Design sur mesure</div>
+          <div class="offre-card-item">Optimisé mobile & tablette</div>
+          <div class="offre-card-item">Formulaire de contact</div>
+          <div class="offre-card-item">Lien en bio Instagram</div>
+        </div>
+      </div>
+      <div class="offre-card fade-up" style="transition-delay:0.2s">
+        <div class="offre-card-num">03</div>
+        <div class="offre-icon">💬</div>
+        <div class="offre-card-title">Réponses<br>qui convertissent</div>
+        <div class="offre-card-subtitle">Zéro prospect perdu</div>
+        <p class="offre-card-text">Je réponds à vos DMs avec des scripts optimisés qui transforment chaque message en rendez-vous.</p>
+        <div class="offre-card-items">
+          <div class="offre-card-item">Réponse en moins de 2h</div>
+          <div class="offre-card-item">Scripts de conversion testés</div>
+          <div class="offre-card-item">Suivi de chaque prospect</div>
+          <div class="offre-card-item">Plus de rendez-vous qualifiés</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-box fade-up">
+        <div class="stat-num">10</div>
+        <div class="stat-label">Posts Instagram / mois</div>
+      </div>
+      <div class="stat-box fade-up" style="transition-delay:0.1s">
+        <div class="stat-num">7j</div>
+        <div class="stat-label">Livraison du mini site</div>
+      </div>
+      <div class="stat-box fade-up" style="transition-delay:0.2s">
+        <div class="stat-num">&lt;2h</div>
+        <div class="stat-label">Temps de réponse DMs</div>
+      </div>
+      <div class="stat-box fade-up" style="transition-delay:0.3s">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Effort de votre côté</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSUS -->
+<section class="process section" id="processus">
+  <div class="container">
+    <h2 class="process-h2 fade-up">Comment ça <em>marche ?</em></h2>
+    <div class="process-steps">
+      <div class="process-step fade-up">
+        <div class="process-step-num">1</div>
+        <div class="process-step-title">Vous m'envoyez un DM</div>
+        <p class="process-step-text">On discute de votre activité, vos objectifs et vos besoins. C'est simple et rapide.</p>
+      </div>
+      <div class="process-step fade-up" style="transition-delay:0.1s">
+        <div class="process-step-num">2</div>
+        <div class="process-step-title">On définit votre stratégie</div>
+        <p class="process-step-text">Je construis un plan de contenu adapté à votre secteur et votre cible.</p>
+      </div>
+      <div class="process-step fade-up" style="transition-delay:0.2s">
+        <div class="process-step-num">3</div>
+        <div class="process-step-title">Je crée & publie</div>
+        <p class="process-step-text">Posts, mini site, réponses clients — tout est en place en moins d'une semaine.</p>
+      </div>
+      <div class="process-step fade-up" style="transition-delay:0.3s">
+        <div class="process-step-num">4</div>
+        <div class="process-step-title">Vous récoltez les clients</div>
+        <p class="process-step-text">Votre présence en ligne travaille 24h/24. Vos clients viennent à vous.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POURQUOI MOI -->
+<section class="pourquoi section" id="apropos">
+  <div class="container">
+    <div class="pourquoi-grid">
+      <div class="pourquoi-photo fade-up">
+        <div class="pourquoi-card">
+          <div class="pourquoi-avatar">M</div>
+          <div class="pourquoi-name">Mattis</div>
+          <div class="pourquoi-role">Social Media Manager • France entière</div>
+          <p class="pourquoi-quote">"J'ai 22 ans. Le jour, je travaille sur des chantiers BTP à travers toute la France. Le soir, depuis ma chambre d'hôtel, je construis la présence en ligne de mes clients. Je connais mieux que personne ce que c'est de manquer de temps."</p>
+          <div class="pourquoi-tags">
+            <span class="pourquoi-tag">🔨 BTP le jour</span>
+            <span class="pourquoi-tag">📱 SMM le soir</span>
+            <span class="pourquoi-tag">🇫🇷 France entière</span>
+          </div>
+        </div>
+      </div>
+      <div class="pourquoi-atouts fade-up">
+        <div class="pourquoi-atout">
+          <div class="pourquoi-atout-icon">⚡</div>
+          <div>
+            <div class="pourquoi-atout-title">100% à distance</div>
+            <div class="pourquoi-atout-text">Je gère des comptes partout en France sans me déplacer. Vous avez juste besoin d'un téléphone.</div>
+          </div>
+        </div>
+        <div class="pourquoi-atout">
+          <div class="pourquoi-atout-icon">🎯</div>
+          <div>
+            <div class="pourquoi-atout-title">Contenu qui convertit</div>
+            <div class="pourquoi-atout-text">Pas juste des beaux posts. Du contenu pensé pour attirer des clients et les pousser à vous contacter.</div>
+          </div>
+        </div>
+        <div class="pourquoi-atout">
+          <div class="pourquoi-atout-icon">🤝</div>
+          <div>
+            <div class="pourquoi-atout-title">Relation directe</div>
+            <div class="pourquoi-atout-text">Vous parlez directement à la personne qui gère votre compte. Pas d'intermédiaire, pas d'agence.</div>
+          </div>
+        </div>
+        <div class="pourquoi-atout">
+          <div class="pourquoi-atout-icon">📊</div>
+          <div>
+            <div class="pourquoi-atout-title">Résultats mesurables</div>
+            <div class="pourquoi-atout-text">Rapport mensuel avec vos métriques clés. Vous voyez exactement ce que ça vous rapporte.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-label">C'est le moment</div>
+    <h2 class="cta-h2">Prêt à attirer<br>plus de clients ?</h2>
+    <p class="cta-sub">Envoyez-moi un DM sur Instagram. On en parle en 10 minutes.</p>
+    <a href="https://instagram.com/clientfloww.fr" target="_blank" class="cta-btn-dark">
+      ✉ DM "GO" sur Instagram →
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">client<span>floww</span>.fr</div>
+  <div class="footer-sub">Gestion Instagram • Mini site • Réponses clients — France entière</div>
+</footer>
+
+<script>
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Nav active
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 50) {
+    nav.style.borderBottomColor = 'rgba(245,197,24,0.3)';
+  } else {
+    nav.style.borderBottomColor = 'rgba(245,197,24,0.15)';
+  }
+});
+</script>
+
+</body>
+</html>
